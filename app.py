@@ -5,6 +5,7 @@ import os
 from werkzeug.utils import secure_filename
 import cv2 as cv
 import numpy as np
+from PIL import Image as im
 
 app = Flask(__name__)
 
@@ -52,15 +53,14 @@ def upload_image():
         flash('No image selected for uploading')
         return redirect(request.url)
     if file and allowed_file(file.filename):
-        # filename = secure_filename(file.filename)
         file.filename = 'orgimg.jpg'
         filename = file.filename
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         img = cv.imread('static/uploads/orgimg.jpg', 1)
         compimg = K_means(img)
-        compimg.filename = 'compimg.jpg'
-        compfilename = compimg.filename
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], compfilename))
+        path = 'static/uploads'
+        cv.imwrite(os.path.join(path, 'compimg.jpg'), compimg)
+        compfilename = os.path.basename('static/uploads/compimg.jpg')
         print('upload_image filename: ' + compfilename)
         flash('Image successfully uploaded and displayed below')
         return render_template('index.html', filename=compfilename)
