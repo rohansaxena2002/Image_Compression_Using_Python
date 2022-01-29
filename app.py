@@ -56,7 +56,8 @@ def upload_image():
         file.filename = 'orgimg.jpg'
         filename = file.filename
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        compimg = K_means('static/uploads/orgimg.jpg')
+        img = cv.imread('static/uploads/orgimg.jpg', 1)
+        compimg = K_means(img)
         compimg.filename = 'compimg.jpg'
         compfilename = compimg.filename
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], compfilename))
